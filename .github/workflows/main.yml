@@ -6,16 +6,16 @@ jobs:
   steps:
    - name: Checkout Repo
      uses: actions/checkout@v3
-   - name: Setup Phyton
-     uses: actions/setup-phyton@main
+   - name: Setup python
+     uses: actions/setup-python@main
      with:
-      phyton-version: '3.10'
+      python-version: '3.10'
    - name: Install Dependencies
      run: |
-         phyton -m pip install --upgrade pip
+         python -m pip install --upgrade pip
          pip install pyyaml   
    - name: Run Feed Generator
-     run: phyton feed.py
+     run: python feed.py
    - name: Push Repo
      run: |
        git config user.name github-actions
