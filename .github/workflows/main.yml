@@ -9,10 +9,10 @@ jobs:
    - name: Setup Phyton
      uses: actions/setups-phyton@v4
      with:
-      phython-version: '3.10'
+      phyton-version: '3.10'
    - name: Install Dependencies
      run: |
-         phython -m pip install --upgrade pip
+         phyton -m pip install --upgrade pip
          pip install pyyaml   
    - name: Run Feed Generator
      run: phyton feed.py
@@ -23,6 +23,9 @@ jobs:
        git add .
        git commit -m "Modified Feed"
        git push
+
+
+
 
 
 
