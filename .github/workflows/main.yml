@@ -1,26 +1,36 @@
 name: Generate Podcast Feeds
 on: [push]
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repo
-      uses: actions/checkout@v3
-      - name: Setup Phyton
-      uses: actions/setups-phyton@v4
-      with:
-        phython-version: '3.10'
-      - name: Install Dependencies
-      run: |
-        phython -m pip install --upgrade pip
-        pip install pyyaml
-     - name: Run Feed Generator
-     run: phyton feed.py
-     - name: Push Repo
+ build:
+  runs-on: ubuntu-latest
+  steps:
+   - name: Checkout Repo
+     uses: actions/checkout@v3
+   - name: Setup Phyton
+     uses: actions/setups-phyton@v4
+     with:
+      phython-version: '3.10'
+   - name: Install Dependencies
      run: |
-     git config user.name github-actions
-     git config user.email github-actions@github.com
-     git add .
-     git commit -m "Modified Feed"
-     git push
+         phython -m pip install --upgrade pip
+         pip install pyyaml   
+   - name: Run Feed Generator
+     run: phyton feed.py
+   - name: Push Repo
+     run: |
+      git config user.name github-actions
+      git config user.email github-actions@github.com
+      git add .
+      git commit -m "Modified Feed"
+      git push
+  
+
+
+
+
+
+
+ 
      
+   
+    
