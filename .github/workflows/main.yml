@@ -7,7 +7,7 @@ jobs:
    - name: Checkout Repo
      uses: actions/checkout@v3
    - name: Setup Phyton
-     uses: actions/setups-phyton@v4
+     uses: actions/setups-phyton@main
      with:
       phyton-version: '3.10'
    - name: Install Dependencies
