@@ -1,5 +1,5 @@
 
-name: Generate Podcast Feeds
+name: Build
 on: [push]
 jobs:
  build:
