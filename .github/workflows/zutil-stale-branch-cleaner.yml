@@ -1,0 +1,45 @@
+name: zutil-stale-branch-cleaner
+ 
+on:
+  workflow_dispatch:
+      inputs:
+        repoName:
+          description: 'repoName'
+          required: true
+        excludedBranches:
+          description: 'Json File For Excluded Branches'
+          default: 'azure_pipelines/configuration/exclude-stale-branch.json'
+        ttl:
+          description: 'Time-to-live'
+          default: '90'
+        throttleLimit:
+          description: 'Throttle Limit'
+          default: '10'
+        AccessToken:
+          description: 'token'
+          required: true
+jobs:
+  STALEBRANCHCLEANER:
+      name: "Cleanup Stale Branches"
+      runs-on:
+        group: bee-build-pool
+        labels: bee-build-runner
+      environment: 
+        name: bee-helper-variables  
+      steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4.2.2
+      - name: "Cleanup Stale Branches"
+        run: |
+          $staleBranches = BL-Get-GitHubRepoStaleBranches -organization ${{ vars.GIT_ORGANIZATION }}  `
+              -repoName ${{ inputs.repoName  }} `
+              -accessToken ${{ inputs.AccessToken }} `
+              -apiVersion ${{ vars.GIT_API_VERSION }} `
+              -ttl ${{ inputs.ttl  }} `
+              -maxThreads ${{ inputs.throttleLimit  }}
+          $excludeBranchConfig = "${{ inputs.excludedBranches  }}"
+          $excludeBranchConfig = (Get-Content -path $excludeBranchConfig) | ConvertFrom-Json
+ 
+          $staleBranches = ($staleBranches | Where-Object { $_.BranchName -notIn $excludeBranchConfig.excludedBranches })
+ 
+        shell: powershell
