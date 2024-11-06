@@ -18,9 +18,7 @@ on:
       AccessToken:
         description: 'Access token'
         required: true
-      branchName:
-        description: 'Branch Name'
-        required: true
+
 jobs:
   STALEBRANCHCLEANER:
       name: "Cleanup Stale Branches"
