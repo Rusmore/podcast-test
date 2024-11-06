@@ -15,9 +15,6 @@ on:
       throttleLimit:
         description: 'Throttle Limit'
         default: '10'
-      AccessToken:
-        description: 'Access token'
-        required: true
 
 jobs:
   STALEBRANCHCLEANER:
