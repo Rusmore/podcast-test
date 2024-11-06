@@ -2,22 +2,25 @@ name: zutil-stale-branch-cleaner
  
 on:
   workflow_dispatch:
-      inputs:
-        repoName:
-          description: 'repoName'
-          required: true
-        excludedBranches:
-          description: 'Json File For Excluded Branches'
-          default: 'azure_pipelines/configuration/exclude-stale-branch.json'
-        ttl:
-          description: 'Time-to-live'
-          default: '90'
-        throttleLimit:
-          description: 'Throttle Limit'
-          default: '10'
-        AccessToken:
-          description: 'token'
-          required: true
+    inputs:
+      repoName:
+        description: 'Repo Name'
+        required: true
+      excludedBranches:
+        description: 'Json File For Excluded Branches'
+        default: 'azure_pipelines/configuration/exclude-stale-branch.json'
+      ttl:
+        description: 'Time-to-live'
+        default: '90'
+      throttleLimit:
+        description: 'Throttle Limit'
+        default: '10'
+      AccessToken:
+        description: 'Access token'
+        required: true
+      branchName:
+        description: 'Branch Name'
+        required: true
 jobs:
   STALEBRANCHCLEANER:
       name: "Cleanup Stale Branches"
@@ -41,5 +44,15 @@ jobs:
           $excludeBranchConfig = (Get-Content -path $excludeBranchConfig) | ConvertFrom-Json
  
           $staleBranches = ($staleBranches | Where-Object { $_.BranchName -notIn $excludeBranchConfig.excludedBranches })
+ 
+          $staleBranches | ForEach-Object -Parallel {
+          Write-Host "Removing $($_.BranchName) in ${{ inputs.repoName }} which was created by $($_.CreatedBy) with last commit $($_.LastCommitDate)..."
+ 
+            BL-Remove-GitHubRepoBranch -organization ${{ vars.GIT_ORGANIZATION }} `
+              -repoName ${{ inputs.repoName  }} `
+              -accessToken ${{ inputs.AccessToken }} `
+              -branchName ${{ inputs.branchName }}
+ 
+          } -ThrottleLimit ${{ inputs.throttleLimit }}
  
         shell: powershell
